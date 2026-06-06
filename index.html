@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kyle — Full Stack Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #faf6f1;
+      --warm-white: #fff9f4;
+      --terracotta: #c4613a;
+      --terracotta-light: #e8896a;
+      --rust: #a84a28;
+      --sand: #e8ddd0;
+      --sand-dark: #d4c4b0;
+      --brown: #4a3728;
+      --brown-light: #7a5c48;
+      --text: #2e1f14;
+      --text-muted: #8a6e5c;
+      --ink: #1a1008;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.4rem 4rem;
+      background: rgba(250, 246, 241, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--sand);
+    }
+
+    .nav-logo {
+      font-family: 'Lora', serif;
+      font-size: 1.25rem;
+      color: var(--terracotta);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--terracotta); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
+      gap: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative blobs */
+    #hero::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(196,97,58,0.12) 0%, transparent 70%);
+      top: 10%; right: -10%;
+      border-radius: 50%;
+    }
+
+    #hero::after {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(232,137,106,0.1) 0%, transparent 70%);
+      bottom: 15%; left: 5%;
+      border-radius: 50%;
+    }
+
+    .hero-text { position: relative; z-index: 1; }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      background: rgba(196,97,58,0.08);
+      padding: 0.35rem 0.9rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(196,97,58,0.2);
+    }
+
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(3rem, 5vw, 5rem);
+      line-height: 1.1;
+      color: var(--ink);
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--terracotta);
+    }
+
+    .hero-bio {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 460px;
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--terracotta);
+      color: white;
+      padding: 0.85rem 2rem;
+      border-radius: 0.4rem;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--rust); transform: translateY(-2px); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--brown);
+      padding: 0.85rem 2rem;
+      border-radius: 0.4rem;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 400;
+      border: 1.5px solid var(--sand-dark);
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+    .btn-secondary:hover { border-color: var(--terracotta); color: var(--terracotta); transform: translateY(-2px); }
+
+    /* Hero visual card */
+    .hero-visual {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-card {
+      background: var(--warm-white);
+      border: 1px solid var(--sand);
+      border-radius: 1.2rem;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 8px 40px rgba(74,55,40,0.08), 0 2px 8px rgba(74,55,40,0.04);
+      transform: rotate(1.5deg);
+      transition: transform 0.3s;
+    }
+    .hero-card:hover { transform: rotate(0deg); }
+
+    .hero-card-avatar {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, var(--terracotta-light), var(--terracotta));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Lora', serif;
+      font-size: 1.6rem;
+      color: white;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-card h3 {
+      font-family: 'Lora', serif;
+      font-size: 1.3rem;
+      color: var(--ink);
+      margin-bottom: 0.25rem;
+    }
+
+    .hero-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .card-tag {
+      background: var(--sand);
+      color: var(--brown-light);
+      font-size: 0.75rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 2rem;
+      font-weight: 400;
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      padding: 7rem 4rem;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .section-label::after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 40px;
+      background: var(--terracotta-light);
+      opacity: 0.5;
+    }
+
+    .section-title {
+      font-family: 'Lora', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      color: var(--ink);
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .section-sub {
+      color: var(--text-muted);
+      max-width: 500px;
+      font-size: 1rem;
+      margin-bottom: 4rem;
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      background: var(--warm-white);
+      border-top: 1px solid var(--sand);
+      border-bottom: 1px solid var(--sand);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .about-text p {
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+      font-size: 1rem;
+      line-height: 1.85;
+    }
+
+    .about-text p strong {
+      color: var(--brown);
+      font-weight: 500;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--cream);
+      border: 1px solid var(--sand);
+      border-radius: 0.8rem;
+      padding: 1.5rem;
+    }
+
+    .stat-number {
+      font-family: 'Lora', serif;
+      font-size: 2.2rem;
+      color: var(--terracotta);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── SKILLS ── */
+    #skills { background: var(--cream); }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .skill-group {
+      background: var(--warm-white);
+      border: 1px solid var(--sand);
+      border-radius: 1rem;
+      padding: 2rem;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+
+    .skill-group:hover {
+      box-shadow: 0 8px 30px rgba(74,55,40,0.1);
+      transform: translateY(-4px);
+    }
+
+    .skill-icon {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .skill-group h3 {
+      font-family: 'Lora', serif;
+      font-size: 1.05rem;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+    }
+
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .skill-pill {
+      background: var(--sand);
+      color: var(--brown-light);
+      font-size: 0.78rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2rem;
+    }
+
+    /* ── EXPERIENCE ── */
+    #experience {
+      background: var(--warm-white);
+      border-top: 1px solid var(--sand);
+      border-bottom: 1px solid var(--sand);
+    }
+
+    .timeline {
+      position: relative;
+      max-width: 760px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 0;
+      width: 1.5px;
+      background: var(--sand-dark);
+    }
+
+    .timeline-item {
+      padding-left: 2.5rem;
+      padding-bottom: 3rem;
+      position: relative;
+    }
+
+    .timeline-item:last-child { padding-bottom: 0; }
+
+    .timeline-dot {
+      position: absolute;
+      left: -5px;
+      top: 6px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      border: 2px solid var(--cream);
+      box-shadow: 0 0 0 3px rgba(196,97,58,0.2);
+    }
+
+    .timeline-meta {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .timeline-role {
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      color: var(--ink);
+    }
+
+    .timeline-company {
+      font-size: 0.85rem;
+      color: var(--terracotta);
+      font-weight: 500;
+    }
+
+    .timeline-date {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-left: auto;
+      letter-spacing: 0.04em;
+    }
+
+    .timeline-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.75;
+      margin-bottom: 0.75rem;
+    }
+
+    .timeline-techs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .tech-tag {
+      background: rgba(196,97,58,0.08);
+      color: var(--terracotta);
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2rem;
+      border: 1px solid rgba(196,97,58,0.15);
+    }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--cream); }
+
+    .contact-inner {
+      max-width: 600px;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 1.2rem 1.5rem;
+      background: var(--warm-white);
+      border: 1px solid var(--sand);
+      border-radius: 0.8rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    .contact-link:hover {
+      border-color: var(--terracotta-light);
+      transform: translateX(6px);
+      box-shadow: 0 4px 20px rgba(74,55,40,0.07);
+    }
+
+    .contact-link-icon {
+      width: 40px; height: 40px;
+      background: var(--sand);
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .contact-link-body { flex: 1; }
+
+    .contact-link-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.1rem;
+    }
+
+    .contact-link-value {
+      font-size: 0.95rem;
+      color: var(--ink);
+      font-weight: 400;
+    }
+
+    .contact-link-arrow {
+      color: var(--sand-dark);
+      font-size: 1.1rem;
+      transition: color 0.2s;
+    }
+    .contact-link:hover .contact-link-arrow { color: var(--terracotta); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 4rem;
+      border-top: 1px solid var(--sand);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    footer a { color: var(--terracotta); text-decoration: none; }
+
+    /* ── FADE-IN ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 2rem; }
+      section { padding: 5rem 2rem; }
+      #hero { grid-template-columns: 1fr; padding: 7rem 2rem 3rem; }
+      .hero-visual { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+      footer { padding: 1.5rem 2rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+
+    @media (max-width: 580px) {
+      .nav-links { display: none; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">Kyle.</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-text">
+      <span class="hero-tag">Available for opportunities</span>
+      <h1>Hi, I'm <em>Kyle</em>.<br>I build things for the web.</h1>
+      <p class="hero-bio">
+        Solo full stack developer who builds cool projects for the web — from database to UI. I love clean code, great DX, and shipping things I'm proud of.
+      </p>
+      <div class="hero-cta">
+        <a href="#experience" class="btn-primary">See my work</a>
+        <a href="#contact" class="btn-secondary">Get in touch</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-card">
+        <div class="hero-card-avatar">K</div>
+        <h3>Kyle</h3>
+        <p>Full Stack Developer</p>
+        <div class="card-tags">
+          <span class="card-tag">React</span>
+          <span class="card-tag">Node.js</span>
+          <span class="card-tag">TypeScript</span>
+          <span class="card-tag">PostgreSQL</span>
+          <span class="card-tag">Docker</span>
+          <span class="card-tag">AWS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-grid">
+      <div class="about-text fade-up">
+        <span class="section-label">About me</span>
+        <h2 class="section-title">A developer who cares about the details.</h2>
+        <p>
+          I'm a solo full stack developer who builds <strong>cool, well-crafted projects</strong> from scratch. I enjoy owning the entire stack — from designing APIs to polishing the last pixel of the UI.
+        </p>
+        <p>
+          Over the past two years I've shipped 5 personal projects, learning something new with every one. When I'm not building, I'm exploring new tools in the JS ecosystem or contributing to open source.
+        </p>
+        <p>
+          I believe great software is built on <strong>curiosity, ownership, and craft</strong> — and I bring all three to everything I make.
+        </p>
+      </div>
+      <div class="about-stats fade-up">
+        <div class="stat-card">
+          <div class="stat-number">2</div>
+          <div class="stat-label">Years building</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">5</div>
+          <div class="stat-label">Projects shipped</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">10+</div>
+          <div class="stat-label">Technologies used</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">∞</div>
+          <div class="stat-label">Bugs squashed</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <span class="section-label">What I work with</span>
+    <h2 class="section-title">Skills & Technologies</h2>
+    <p class="section-sub">A curated stack built from real-world projects and a love for the right tool for the job.</p>
+
+    <div class="skills-grid">
+      <div class="skill-group fade-up">
+        <div class="skill-icon">🖥️</div>
+        <h3>Frontend</h3>
+        <div class="skill-list">
+          <span class="skill-pill">React</span>
+          <span class="skill-pill">Next.js</span>
+          <span class="skill-pill">TypeScript</span>
+          <span class="skill-pill">Tailwind CSS</span>
+          <span class="skill-pill">Vite</span>
+          <span class="skill-pill">Framer Motion</span>
+        </div>
+      </div>
+
+      <div class="skill-group fade-up">
+        <div class="skill-icon">⚙️</div>
+        <h3>Backend</h3>
+        <div class="skill-list">
+          <span class="skill-pill">Node.js</span>
+          <span class="skill-pill">Express</span>
+          <span class="skill-pill">REST APIs</span>
+          <span class="skill-pill">GraphQL</span>
+          <span class="skill-pill">Python</span>
+          <span class="skill-pill">tRPC</span>
+        </div>
+      </div>
+
+      <div class="skill-group fade-up">
+        <div class="skill-icon">🗄️</div>
+        <h3>Database</h3>
+        <div class="skill-list">
+          <span class="skill-pill">PostgreSQL</span>
+          <span class="skill-pill">MySQL</span>
+          <span class="skill-pill">MongoDB</span>
+          <span class="skill-pill">Redis</span>
+          <span class="skill-pill">Prisma</span>
+          <span class="skill-pill">Drizzle</span>
+        </div>
+      </div>
+
+      <div class="skill-group fade-up">
+        <div class="skill-icon">☁️</div>
+        <h3>Cloud & DevOps</h3>
+        <div class="skill-list">
+          <span class="skill-pill">AWS</span>
+          <span class="skill-pill">Docker</span>
+          <span class="skill-pill">Vercel</span>
+          <span class="skill-pill">GitHub Actions</span>
+          <span class="skill-pill">Linux</span>
+        </div>
+      </div>
+
+      <div class="skill-group fade-up">
+        <div class="skill-icon">🛠️</div>
+        <h3>Tools & Workflow</h3>
+        <div class="skill-list">
+          <span class="skill-pill">Git</span>
+          <span class="skill-pill">VS Code</span>
+          <span class="skill-pill">Figma</span>
+          <span class="skill-pill">Postman</span>
+          <span class="skill-pill">Jira</span>
+          <span class="skill-pill">Linear</span>
+        </div>
+      </div>
+
+      <div class="skill-group fade-up">
+        <div class="skill-icon">📐</div>
+        <h3>Practices</h3>
+        <div class="skill-list">
+          <span class="skill-pill">Agile</span>
+          <span class="skill-pill">TDD</span>
+          <span class="skill-pill">Code Review</span>
+          <span class="skill-pill">CI/CD</span>
+          <span class="skill-pill">Accessibility</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <span class="section-label">Journey</span>
+    <h2 class="section-title">Experience</h2>
+    <p class="section-sub">Two years of learning by doing — building solo projects end to end.</p>
+
+    <div class="timeline">
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-meta">
+          <span class="timeline-role">Solo Full Stack Developer</span>
+          <span class="timeline-company">Independent</span>
+          <span class="timeline-date">2024 — Present</span>
+        </div>
+        <p class="timeline-desc">
+          Continued building and shipping personal projects, taking on more complex challenges across the full stack. Deepened experience with cloud infrastructure, auth systems, and real-time features.
+        </p>
+        <div class="timeline-techs">
+          <span class="tech-tag">Next.js</span>
+          <span class="tech-tag">Node.js</span>
+          <span class="tech-tag">PostgreSQL</span>
+          <span class="tech-tag">Vercel</span>
+          <span class="tech-tag">Docker</span>
+        </div>
+      </div>
+
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-meta">
+          <span class="timeline-role">Started Coding</span>
+          <span class="timeline-company">Self-taught</span>
+          <span class="timeline-date">2024</span>
+        </div>
+        <p class="timeline-desc">
+          Dove into web development, learning the fundamentals of HTML, CSS, JavaScript, and then React. Shipped my first full stack project and never looked back.
+        </p>
+        <div class="timeline-techs">
+          <span class="tech-tag">React</span>
+          <span class="tech-tag">JavaScript</span>
+          <span class="tech-tag">Express</span>
+          <span class="tech-tag">CSS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-inner">
+      <span class="section-label">Say hello</span>
+      <h2 class="section-title">Let's work together.</h2>
+      <p class="section-sub">Whether you have a project in mind, a role to fill, or just want to chat — my inbox is always open.</p>
+
+      <div class="contact-links fade-up">
+        <a href="mailto:kyle.morning1204@gmail.com" class="contact-link">
+          <div class="contact-link-icon">✉️</div>
+          <div class="contact-link-body">
+            <div class="contact-link-label">Email</div>
+            <div class="contact-link-value">kyle.morning1204@gmail.com</div>
+          </div>
+          <span class="contact-link-arrow">→</span>
+        </a>
+
+        <a href="https://github.com/kyle" target="_blank" rel="noopener" class="contact-link">
+          <div class="contact-link-icon">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" style="color: var(--brown-light)"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.38 7.86 10.9.57.1.78-.25.78-.55v-2c-3.19.7-3.86-1.54-3.86-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.75 1.18 1.75 1.18 1.02 1.75 2.68 1.24 3.33.95.1-.74.4-1.24.73-1.53-2.55-.29-5.23-1.27-5.23-5.67 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.45.11-3.02 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 2.87-.39c.97 0 1.95.13 2.87.39 2.18-1.49 3.14-1.18 3.14-1.18.63 1.57.23 2.73.11 3.02.74.8 1.18 1.82 1.18 3.07 0 4.41-2.69 5.38-5.25 5.66.41.36.78 1.07.78 2.15v3.19c0 .31.2.66.79.55A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+          </div>
+          <div class="contact-link-body">
+            <div class="contact-link-label">GitHub</div>
+            <div class="contact-link-value">github.com/kyle</div>
+          </div>
+          <span class="contact-link-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2026 Kyle. Built with care.</span>
+    <span>Designed & coded by <a href="#">Kyle</a></span>
+  </footer>
+
+  <script>
+    // Fade-up scroll observer
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          const siblings = e.target.parentElement.querySelectorAll('.fade-up');
+          const idx = Array.from(siblings).indexOf(e.target);
+          setTimeout(() => {
+            e.target.classList.add('visible');
+          }, idx * 80);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
